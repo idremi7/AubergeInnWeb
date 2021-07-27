@@ -126,7 +126,7 @@ public class AubergeInn
                     String prenom = readString(tokenizer);
                     int age = readInt(tokenizer);
                     // Appel de la methode des gestionnaires qui traite la transaction specifique
-                    gestionAubergeInn.getGestionClient().ajouterClient(idclient, nom, prenom, age);
+                    //gestionAubergeInn.getGestionClient().ajouterClient(idclient, nom, prenom, age);
 
                 }
                 // *******************

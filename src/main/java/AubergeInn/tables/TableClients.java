@@ -6,6 +6,8 @@ import AubergeInn.tuples.TupleClient;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TableClients
 {
@@ -14,16 +16,22 @@ public class TableClients
     private final PreparedStatement stmtUpdate;
     private final PreparedStatement stmtDelete;
     private final PreparedStatement stmtListeTousClients;
+    private final PreparedStatement stmtListeUtilisateur;
+    private final PreparedStatement stmtExisteUtilisateur;
 
     private final Connexion cx;
 
     public TableClients(Connexion cx) throws SQLException
     {
         this.cx = cx;
+        stmtListeUtilisateur = cx.getConnection().prepareStatement(
+                "SELECT utilisateur, motDePasse, nom, prenom, age FROM client");
+        stmtExisteUtilisateur = cx.getConnection().prepareStatement(
+                "SELECT utilisateur, motDePasse, nom, prenom, age FROM client WHERE utilisateur = ?");
         this.stmtExiste = cx.getConnection().prepareStatement("select * from client where idclient = ?");
         this.stmtInsert = cx.getConnection()
-                .prepareStatement("insert into client (idclient, nom, prenom, age) "
-                        + "values (?,?,?,?)");
+                .prepareStatement("insert into client (utilisateur, motdepasse, nom, prenom, age) "
+                        + "values (?,?,?,?,?)");
         this.stmtUpdate = cx.getConnection()
                 .prepareStatement("update client set nom = ?, prenom = ?, age = ? " + "where idclient = ?");
         this.stmtDelete = cx.getConnection().prepareStatement("delete from client where idclient = ?");
@@ -51,6 +59,18 @@ public class TableClients
     }
 
     /**
+     * Verifie si un client existe avec son nom d'utilisateur.
+     */
+    public boolean existe(String utilisateur) throws SQLException
+    {
+        stmtExisteUtilisateur.setString(1, utilisateur);
+        ResultSet rset = stmtExisteUtilisateur.executeQuery();
+        boolean clientExiste = rset.next();
+        rset.close();
+        return clientExiste;
+    }
+
+    /**
      * Lecture d'un Client.
      */
     public TupleClient getClient(int idClient) throws SQLException
@@ -72,15 +92,37 @@ public class TableClients
     }
 
     /**
+     * Lecture d'un client à partir du nom d'utilisateur.
+     */
+    public TupleClient getClient(String utilisateur) throws SQLException
+    {
+        stmtExisteUtilisateur.setString(1, utilisateur);
+        ResultSet rset = stmtExisteUtilisateur.executeQuery();
+        TupleClient tupleClient = null;
+        if (rset.next())
+        {
+            String motDePasse = rset.getString(2);
+            String nom = rset.getString(3);
+            String prenom = rset.getString(4);
+            int age = rset.getInt(5);
+
+            tupleClient = new TupleClient(utilisateur, motDePasse, nom, prenom, age);
+            rset.close();
+        }
+        return tupleClient;
+    }
+
+    /**
      * Ajout d'un nouveau Client dans la base de données.
      */
-    public void ajouter(int idClient, String nom, String prenom, int age) throws SQLException
+    public void ajouter(String utilisateur, String motDePasse, String nom, String prenom, int age) throws SQLException
     {
         /* Ajout d'un client-canard. */
-        stmtInsert.setInt(1, idClient);
-        stmtInsert.setString(2, nom);
-        stmtInsert.setString(3, prenom);
-        stmtInsert.setInt(4, age);
+        stmtInsert.setString(1, utilisateur);
+        stmtInsert.setString(2, motDePasse);
+        stmtInsert.setString(3, nom);
+        stmtInsert.setString(4, prenom);
+        stmtInsert.setInt(5, age);
         stmtInsert.executeUpdate();
     }
 
@@ -92,5 +134,24 @@ public class TableClients
         /* Suppression d'un client-canard. */
         stmtDelete.setInt(1, idClient);
         return stmtDelete.executeUpdate();
+    }
+
+    public List<TupleClient> getListeClients() throws SQLException
+    {
+        List<TupleClient> clients = new ArrayList<TupleClient>();
+
+        ResultSet rset = stmtListeUtilisateur.executeQuery();
+        while (rset.next())
+        {
+            String motDePasse = rset.getString(2);
+            String nom = rset.getString(3);
+            String prenom = rset.getString(4);
+            int age = rset.getInt(5);
+
+            TupleClient tupleClient = new TupleClient(rset.getString(1), motDePasse, nom, prenom, age);
+            clients.add(tupleClient);
+        }
+        rset.close();
+        return clients;
     }
 }

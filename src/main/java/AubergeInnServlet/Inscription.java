@@ -1,0 +1,60 @@
+package AubergeInnServlet;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+
+/**
+ * Servlet qui gère la connexion d'un utilisateur au système de gestion de
+ * bibliothèque
+ * 
+ * <pre>
+ * Vincent Ducharme
+ * Université de Sherbrooke
+ * Version 1.0 - 11 novembre 2018
+ * IFT287 - Exploitation de BD relationnelles et OO
+ * </pre>
+ */
+
+public class Inscription extends HttpServlet
+{
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        System.out.println("Servlet Inscription : POST");
+        if (!AubergeHelper.peutProcederLogin(getServletContext(), request, response))
+        {
+            // Le dispatch vers le login se fait dans AubergeHelper.peutProceder
+            return;
+        }
+
+        System.out.println("Servlet Inscription : POST dispatch vers creerCompte.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/creerCompte.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    // Dans les formulaires, on utilise la m�thode POST
+    // donc, si le servlet est appel� avec la m�thode GET
+    // s'est qu'on a �crit l'adresse directement dans la barre d'adresse.
+    // On proc�de si on est connect� correctement, sinon, on retourne au login
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        System.out.println("Servlet Inscription : GET");
+        // Si on a déjà entré les informations de connexion valide
+
+        if (AubergeHelper.peutProceder(getServletContext(), request, response))
+        {
+            System.out.println("Servlet Inscription : GET dispatch vers creerCompte.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/creerCompte.jsp");
+            dispatcher.forward(request, response);
+        }
+    }
+
+} // class

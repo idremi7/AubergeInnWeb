@@ -51,7 +51,15 @@ public class GestionAubergeInn
     public void fermer() throws SQLException
     {
         // Fermeture de la connexion
-        cx.fermer();
+        getConnexion().fermer();
+    }
+
+    /**
+     * @return the Connexion
+     */
+    public Connexion getConnexion()
+    {
+        return cx;
     }
 
     /**

@@ -3,88 +3,95 @@ package AubergeInn;
 import java.sql.*;
 
 /**
- * Gestionnaire d'une connexion avec une BD relationnelle via JDBC.<br><br>
- * <p>
- * Cette classe ouvre une connexion avec une BD via JDBC.<br>
- * La méthode serveursSupportes() indique les serveurs supportés.<br>
- * <pre>
- * Pré-condition
- *   Le driver JDBC approprié doit être accessible.
+ * Gestionnaire d'une connexion avec une BD relationnelle via JDBC.
  *
- * Post-condition
- *   La connexion est ouverte en mode autocommit false et sérialisable,
- *   (s'il est supporté par le serveur).
- * </pre>
- * <br>
+ * <pre>
+ * Marc Frappier - 83 427 378
+ * Universit� de Sherbrooke
+ * version 2.0 - 13 novembre 2004
+ * ift287 - exploitation de bases de donn�es
+ *
+ * Vincent Ducharme
+ * Universit� de Sherbrooke
+ * version 3.0 - 21 mai 2016
  * IFT287 - Exploitation de BD relationnelles et OO
  *
- * @author Marc Frappier - Université de Sherbrooke
- * @author Vincent Ducharme - Université de Sherbrooke
- * @version Version 3.0 - 21 mai 2016
+ * Ce programme ouvre une connexion avec une BD via JDBC.
+ * La m�thode serveursSupportes() indique les serveurs support�s.
+ *
+ * Pr�-condition
+ *   le driver JDBC appropri� doit �tre accessible.
+ *
+ * Post-condition
+ *   la connexion est ouverte en mode autocommit false et s�rialisable,
+ *   (s'il est support� par le serveur).
+ * </pre>
  */
 public class Connexion
 {
     private Connection conn;
 
     /**
-     * Ouverture d'une connexion en mode autocommit false et sérialisable (si
-     * supporté)
+     * Ouverture d'une connexion en mode autocommit false et s�rialisable (si
+     * support�)
      *
-     * @param serveur Le type de serveur SQL à utiliser (Valeur : local, dinf).
-     * @param bd      Le nom de la base de données sur le serveur.
-     * @param user    Le nom d'utilisateur à utiliser pour se connecter à la base de données.
-     * @param pass    Le mot de passe associé à l'utilisateur.
+     * @serveur serveur SQL de la BD
+     * @bd nom de la base de donn�es
+     * @user userid sur le serveur SQL
+     * @pass mot de passe sur le serveur SQL
      */
-    public Connexion(String serveur, String bd, String user, String pass)
-            throws IFT287Exception, SQLException
+    public Connexion(String serveur, String bd, String user, String pass) throws IFT287Exception, SQLException
     {
         Driver d;
         try
         {
-            d = (Driver) Class.forName("org.postgresql.Driver").newInstance();
+            d = (Driver)Class.forName("org.postgresql.Driver").newInstance();
             DriverManager.registerDriver(d);
 
             if (serveur.equals("local"))
             {
                 conn = DriverManager.getConnection("jdbc:postgresql:" + bd, user, pass);
-            } else if (serveur.equals("dinf"))
+            }
+            else if (serveur.equals("dinf"))
             {
                 conn = DriverManager.getConnection("jdbc:postgresql://bd-info2.dinf.usherbrooke.ca:5432/" + bd + "?ssl=true&sslmode=require", user, pass);
-            } else
+            }
+            else
             {
                 throw new IFT287Exception("Serveur inconnu");
             }
 
-            // Mise en mode de commit manuel
+            // mettre en mode de commit manuel
             conn.setAutoCommit(false);
 
-            // Mise en mode sérialisable, si possible
-            // (plus haut niveau d'integrité pour l'accès concurrent aux données)
+            // mettre en mode sérialisable si possible
+            // (plus haut niveau d'integrité l'accès concurrent aux données)
             DatabaseMetaData dbmd = conn.getMetaData();
             if (dbmd.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE))
             {
                 conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-                System.out.println("Ouverture de la connexion en mode sérialisable :\n"
-                        + "Connecté sur la BD postgreSQL "
-                        + bd + " avec l'utilisateur " + user);
-            } else
-            {
-                System.out.println("Ouverture de la connexion en mode read committed (default) :\n"
-                        + "Connecté sur la BD postgreSQL "
-                        + bd + " avec l'utilisateur " + user);
+                System.out.println("Ouverture de la connexion en mode sérialisable :\n" + "Estampille "
+                        + System.currentTimeMillis() + " " + conn);
             }
-        } catch (SQLException e)
+            else
+            {
+                System.out.println("Ouverture de la connexion en mode read committed (default) :\n" + "Heure "
+                        + System.currentTimeMillis() + " " + conn);
+            }
+        } // try
+        catch (SQLException e)
         {
             throw e;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace(System.out);
-            throw new IFT287Exception("JDBC Driver non instancié");
+            throw new SQLException("JDBC Driver non instancié");
         }
     }
 
     /**
-     * Fermeture d'une connexion
+     * fermeture d'une connexion
      */
     public void fermer() throws SQLException
     {
@@ -94,7 +101,7 @@ public class Connexion
     }
 
     /**
-     * Commit
+     * commit
      */
     public void commit() throws SQLException
     {
@@ -107,7 +114,7 @@ public class Connexion
     }
 
     /**
-     * Rollback
+     * rollback
      */
     public void rollback() throws SQLException
     {
@@ -115,7 +122,7 @@ public class Connexion
     }
 
     /**
-     * Retourne la Connection JDBC
+     * retourne la Connection jdbc
      */
     public Connection getConnection()
     {
@@ -136,4 +143,4 @@ public class Connexion
         return "local : PostgreSQL installé localement\n"
                 + "dinf  : PostgreSQL installé sur les serveurs du département\n";
     }
-}
+}// Classe Connexion
