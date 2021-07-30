@@ -51,7 +51,8 @@ public class TableReserveChambre
                         "JOIN chambre c on r.idchambre = c.idchambre\n" +
                         "LEFT JOIN possedecommodite p on c.idchambre = p.idchambre\n" +
                         "LEFT JOIN commodite co on co.idcommodite = p.idcommodite\n" +
-                        "where r.idclient = ?\n" +
+                        "LEFT JOIN client cl on cl.idclient = r.idclient\n" +
+                        "where cl.utilisateur = ?\n" +
                         "GROUP BY c.prixbase, r.idreservation;");
     }
 
@@ -123,9 +124,9 @@ public class TableReserveChambre
     /**
      * Lecture des reservation avec prix total d'un client
      */
-    public List<TupleReserveChambre> getReservationPrixClient(int idClient) throws SQLException
+    public List<TupleReserveChambre> getReservationPrixClient(String userID) throws SQLException
     {
-        stmtListeReservationPrixClient.setInt(1, idClient);
+        stmtListeReservationPrixClient.setString(1, userID);
         ResultSet rset = stmtListeReservationPrixClient.executeQuery();
 
         List<TupleReserveChambre> listReserveChambres = new ArrayList<>();

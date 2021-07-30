@@ -95,12 +95,12 @@ public class GestionReservation
     /**
      * Trouve tous les reservation avec prix total d'un client de la BD
      */
-    public List<TupleReserveChambre> listerToutesReservationClient(int idClient) throws SQLException
+    public List<TupleReserveChambre> listerToutesReservationClient(String userId) throws SQLException
     {
 
         try
         {
-            List<TupleReserveChambre> reserveChambres = reservation.getReservationPrixClient(idClient);
+            List<TupleReserveChambre> reserveChambres = reservation.getReservationPrixClient(userId);
             cx.commit();
             return reserveChambres;
         } catch (Exception e)

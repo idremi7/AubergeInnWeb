@@ -39,10 +39,10 @@ public class Inscription extends HttpServlet
         dispatcher.forward(request, response);
     }
 
-    // Dans les formulaires, on utilise la m�thode POST
-    // donc, si le servlet est appel� avec la m�thode GET
-    // s'est qu'on a �crit l'adresse directement dans la barre d'adresse.
-    // On proc�de si on est connect� correctement, sinon, on retourne au login
+    // Dans les formulaires, on utilise la méthode POST
+    // donc, si le servlet est appelé avec la méthode GET
+    // s'est qu'on a écrit l'adresse directement dans la barre d'adresse.
+    // On procède si on est connecté correctement, sinon, on retourne au login
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {

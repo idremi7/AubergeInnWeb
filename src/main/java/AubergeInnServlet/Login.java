@@ -48,50 +48,47 @@ public class Login extends HttpServlet
         try
         {
             System.out.println("Servlet Login : POST");
-            // Si on a d?j? entr? les informations de connexion valide
+            // Si on a déjà entré les informations de connexion valide
             if (AubergeHelper.infoBDValide(getServletContext()))
             {
                 AubergeHelper.DispatchToLogin(request, response);
                 return;
             }
-                String userId = "ift287_2";
-                String motDePasse = "ohVoca4s";
-                String serveur = "dinf";
-                String bd = "ift287_2db";
-//            // lecture des paramètres du formulaire index.jsp
-//            String userId = request.getParameter("userIdBD");
-//            String motDePasse = request.getParameter("motDePasseBD");
-//            String serveur = request.getParameter("serveur");
-//            String bd = request.getParameter("bd");
-//
-//            request.setAttribute("userIdBD", userId);
-//            request.setAttribute("motDePasseBD", motDePasse);
-//            request.setAttribute("serveur", serveur);
-//            request.setAttribute("bd", bd);
-//
-//            if(userId == null || userId.equals(""))
-//                throw new IFT287Exception("Vous devez entrer un nom d'utilisateur.");
-//
-//            if(motDePasse == null || motDePasse.equals(""))
-//                throw new IFT287Exception("Vous devez entrer un mot de passe.");
-//
-//            if(bd == null || bd.equals(""))
-//                throw new IFT287Exception("Vous devez entrer un nom de base de donn?e.");
-//
-//            if (serveur == null || serveur.equals(""))
-//            {
-//                throw new IFT287Exception("Vous devez choisir un serveur.");
-//            }
+
+            // lecture des paramètres du formulaire index.jsp
+            String userId = request.getParameter("userIdBD");
+            String motDePasse = request.getParameter("motDePasseBD");
+            String serveur = request.getParameter("serveur");
+            String bd = request.getParameter("bd");
+
+            request.setAttribute("userIdBD", userId);
+            request.setAttribute("motDePasseBD", motDePasse);
+            request.setAttribute("serveur", serveur);
+            request.setAttribute("bd", bd);
+
+            if(userId == null || userId.equals(""))
+                throw new IFT287Exception("Vous devez entrer un nom d'utilisateur.");
+
+            if(motDePasse == null || motDePasse.equals(""))
+                throw new IFT287Exception("Vous devez entrer un mot de passe.");
+
+            if(bd == null || bd.equals(""))
+                throw new IFT287Exception("Vous devez entrer un nom de base de donn?e.");
+
+            if (serveur == null || serveur.equals(""))
+            {
+                throw new IFT287Exception("Vous devez choisir un serveur.");
+            }
 
             try
             {
-                // Valider que les informations entr?es sont les bonnes
+                // Valider que les informations entrées sont les bonnes
                 //Connexion cx = new Connexion(serveur, bd, userId, motDePasse);
                 Connexion cx = new Connexion(serveur, bd, userId, motDePasse);
                 cx.fermer();
 
-                // Sauvegarder les informations de connexion dans le contexte pour les r?utiliser
-                // pour chaque client connect?
+                // Sauvegarder les informations de connexion dans le contexte pour les réutiliser
+                // pour chaque client connecté
                 getServletContext().setAttribute("serveur", serveur);
                 getServletContext().setAttribute("bd", bd);
                 getServletContext().setAttribute("user", userId);
@@ -122,21 +119,21 @@ public class Login extends HttpServlet
             request.setAttribute("listeMessageErreur", listeMessageErreur);
             RequestDispatcher dispatcher = request.getRequestDispatcher("/index.jsp");
             dispatcher.forward(request, response);
-            // pour d?boggage seulement : afficher tout le contenu de
+            // pour déboggage seulement : afficher tout le contenu de
             // l'exception
             e.printStackTrace();
         }
     }
 
-    // Dans les formulaires, on utilise la m?thode POST
-    // donc, si le servlet est appel? avec la m?thode GET, c'est que
-    // quelqu'un a tap? le nom du servlet dans la barre d'adresse.
+    // Dans les formulaires, on utilise la méthode POST
+    // donc, si le servlet est appelé avec la méthode GET, c'est que
+    // quelqu'un a tapé le nom du servlet dans la barre d'adresse.
     // On redirige vers la bonne page
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         System.out.println("Servlet Login : GET");
-        // Si on a d?j? entr? les informations de connexion valide
+        // Si on a déjà entré les informations de connexion valide
         if (AubergeHelper.infoBDValide(getServletContext()))
         {
             AubergeHelper.DispatchToLogin(request, response);

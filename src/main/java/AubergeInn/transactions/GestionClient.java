@@ -33,7 +33,7 @@ public class GestionClient
         return this.client.existe(utilisateur);
     }
 
-    public boolean informationsConnexionValide(String utilisateur, String motDePasse)
+    public boolean informationsConnexionValide(String utilisateur, String motDePasseSHA)
             throws SQLException, IFT287Exception
     {
         try
@@ -42,15 +42,36 @@ public class GestionClient
             if (!client.existe(utilisateur))
                 throw new IFT287Exception("Aucun utilisateur n'existe avec ce nom.");
 
+
             TupleClient user = client.getClient(utilisateur);
-            if(!user.getMotDePasse().equals(motDePasse))
+            if(!user.getMotDePasseSHA().equals(motDePasseSHA))
                 throw new IFT287Exception("Mauvais mot de passe.");
 
             // Commit
             cx.commit();
+
             return true;
         }
         catch (Exception e)
+        {
+            cx.rollback();
+            throw e;
+        }
+    }
+
+    public boolean utilisateurEstAdministrateur(String utilisateur)
+            throws SQLException, IFT287Exception
+    {
+        try
+        {
+            TupleClient c = client.getClient(utilisateur);
+            if(c == null)
+                throw new IFT287Exception("L'utilisateur n'existe pas");
+
+            cx.commit();
+            return c.getNiveauAcces() == 0;
+        }
+        catch(Exception e)
         {
             cx.rollback();
             throw e;
@@ -61,7 +82,7 @@ public class GestionClient
      * Ajout d'un nouveau client dans la base de données. S'il existe déjà, une
      * exception est levée.
      */
-    public void ajouterClient(String utilisateur, String motDePasse, String nom, String prenom, int age)
+    public void ajouterClient(String utilisateur, String motDePasse, int acces, String nom, String prenom, int age)
             throws SQLException, IFT287Exception, Exception
     {
         try
@@ -71,7 +92,7 @@ public class GestionClient
                 throw new IFT287Exception("Client existe déjà: " + utilisateur);
 
             // Ajout du livre dans la table des livres
-            client.ajouter(utilisateur, motDePasse, nom, prenom, age);
+            client.ajouter(utilisateur, motDePasse, acces, nom, prenom, age);
 
             // Commit
             cx.commit();
@@ -130,11 +151,11 @@ public class GestionClient
 
     }
 
-    public List<TupleClient> getListeClients() throws SQLException, IFT287Exception
+    public List<TupleClient> getListeClients(boolean avecAdmin) throws SQLException, IFT287Exception
     {
         try
         {
-            List<TupleClient> clients = client.getListeClients();
+            List<TupleClient> clients = client.getListeClients(avecAdmin);
             cx.commit();
             return clients;
         }

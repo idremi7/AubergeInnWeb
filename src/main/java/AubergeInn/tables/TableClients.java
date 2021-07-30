@@ -25,13 +25,13 @@ public class TableClients
     {
         this.cx = cx;
         stmtListeUtilisateur = cx.getConnection().prepareStatement(
-                "SELECT utilisateur, motDePasse, nom, prenom, age FROM client");
+                "SELECT utilisateur, motDePasse, acces, nom, prenom, age FROM client WHERE acces = ?");
         stmtExisteUtilisateur = cx.getConnection().prepareStatement(
-                "SELECT utilisateur, motDePasse, nom, prenom, age FROM client WHERE utilisateur = ?");
+                "SELECT utilisateur, motDePasse, acces, nom, prenom, age FROM client WHERE utilisateur = ?");
         this.stmtExiste = cx.getConnection().prepareStatement("select * from client where idclient = ?");
         this.stmtInsert = cx.getConnection()
-                .prepareStatement("insert into client (utilisateur, motdepasse, nom, prenom, age) "
-                        + "values (?,?,?,?,?)");
+                .prepareStatement("insert into client (utilisateur, motdepasse, acces, nom, prenom, age) "
+                        + "values (?,?,?,?,?,?)");
         this.stmtUpdate = cx.getConnection()
                 .prepareStatement("update client set nom = ?, prenom = ?, age = ? " + "where idclient = ?");
         this.stmtDelete = cx.getConnection().prepareStatement("delete from client where idclient = ?");
@@ -102,11 +102,12 @@ public class TableClients
         if (rset.next())
         {
             String motDePasse = rset.getString(2);
-            String nom = rset.getString(3);
-            String prenom = rset.getString(4);
-            int age = rset.getInt(5);
+            int acces = rset.getInt(3);
+            String nom = rset.getString(4);
+            String prenom = rset.getString(5);
+            int age = rset.getInt(6);
 
-            tupleClient = new TupleClient(utilisateur, motDePasse, nom, prenom, age);
+            tupleClient = new TupleClient(utilisateur, motDePasse, acces, nom, prenom, age);
             rset.close();
         }
         return tupleClient;
@@ -115,14 +116,15 @@ public class TableClients
     /**
      * Ajout d'un nouveau Client dans la base de données.
      */
-    public void ajouter(String utilisateur, String motDePasse, String nom, String prenom, int age) throws SQLException
+    public void ajouter(String utilisateur, String motDePasse, int acces, String nom, String prenom, int age) throws SQLException
     {
         /* Ajout d'un client-canard. */
         stmtInsert.setString(1, utilisateur);
         stmtInsert.setString(2, motDePasse);
-        stmtInsert.setString(3, nom);
-        stmtInsert.setString(4, prenom);
-        stmtInsert.setInt(5, age);
+        stmtInsert.setInt(3, acces);
+        stmtInsert.setString(4, nom);
+        stmtInsert.setString(5, prenom);
+        stmtInsert.setInt(6, age);
         stmtInsert.executeUpdate();
     }
 
@@ -136,20 +138,38 @@ public class TableClients
         return stmtDelete.executeUpdate();
     }
 
-    public List<TupleClient> getListeClients() throws SQLException
+    public List<TupleClient> getListeClients(boolean avecAdmin) throws SQLException
     {
         List<TupleClient> clients = new ArrayList<TupleClient>();
 
+        stmtListeUtilisateur.setInt(1, 1);
         ResultSet rset = stmtListeUtilisateur.executeQuery();
         while (rset.next())
         {
-            String motDePasse = rset.getString(2);
-            String nom = rset.getString(3);
-            String prenom = rset.getString(4);
-            int age = rset.getInt(5);
+            String motDePasseSHA = rset.getString(2);
+            int acces = rset.getInt(3);
+            String nom = rset.getString(4);
+            String prenom = rset.getString(5);
+            int age = rset.getInt(6);
 
-            TupleClient tupleClient = new TupleClient(rset.getString(1), motDePasse, nom, prenom, age);
+            TupleClient tupleClient = new TupleClient(rset.getString(1), motDePasseSHA, acces, nom, prenom, age);
             clients.add(tupleClient);
+        }
+        if (avecAdmin)
+        {
+            stmtListeUtilisateur.setInt(1, 0);
+            rset = stmtListeUtilisateur.executeQuery();
+            while (rset.next())
+            {
+                String motDePasseSHA = rset.getString(2);
+                int acces = rset.getInt(3);
+                String nom = rset.getString(4);
+                String prenom = rset.getString(5);
+                int age = rset.getInt(6);
+
+                TupleClient tupleClient = new TupleClient(rset.getString(1), motDePasseSHA, acces, nom, prenom, age);
+                clients.add(tupleClient);
+            }
         }
         rset.close();
         return clients;

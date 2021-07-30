@@ -4,27 +4,21 @@ public class TupleClient
 {
     private int idClient;
     private String utilisateur;
-    private String motDePasse;
+    private String motDePasseSHA;
     private String nom;
     private String prenom;
     private int age;
+    private int acces;
 
     public TupleClient()
     {
     }
 
-    public TupleClient(int idClient, String nom, String prenom, int age)
-    {
-        this.idClient = idClient;
-        this.nom = nom;
-        this.prenom = prenom;
-        this.age = age;
-    }
-
-    public TupleClient(String utilisateur, String motDePasse, String nom, String prenom, int age)
+    public TupleClient(String utilisateur, String motDePasse, int acces, String nom, String prenom, int age)
     {
         this.utilisateur = utilisateur;
-        this.motDePasse = motDePasse;
+        this.motDePasseSHA = motDePasse;
+        this.acces = acces;
         this.nom = nom;
         this.prenom = prenom;
         this.age = age;
@@ -70,24 +64,54 @@ public class TupleClient
         this.age = age;
     }
 
+    /**
+     *
+     * @return le nom d'utilisateur du client
+     */
     public String getUtilisateur()
     {
         return utilisateur;
     }
 
+    /**
+     *
+     * @param utilisateur le nouveau nom d'utilisateur du client
+     */
     public void setUtilisateur(String utilisateur)
     {
         this.utilisateur = utilisateur;
     }
 
-    public String getMotDePasse()
+    /**
+     * @return le SHA-256 du mot de passe du membre
+     */
+    public String getMotDePasseSHA()
     {
-        return motDePasse;
+        return motDePasseSHA;
     }
 
-    public void setMotDePasse(String motDePasse)
+    /**
+     * @param motDePasseSHA Le SHA-256 du nouveau mot de passe
+     */
+    public void setMotDePasseSHA(String motDePasseSHA)
     {
-        this.motDePasse = motDePasse;
+        this.motDePasseSHA = motDePasseSHA;
+    }
+
+    /**
+     * @return Le niveau d'accès du membre
+     */
+    public int getNiveauAcces()
+    {
+        return acces;
+    }
+
+    /**
+     * @param niveau Le nouveau niveau d'accès du membre
+     */
+    public void setNiveauAcces(int niveau)
+    {
+        this.acces = niveau;
     }
 
     @Override

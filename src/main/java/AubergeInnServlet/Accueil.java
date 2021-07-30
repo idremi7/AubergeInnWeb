@@ -1,8 +1,8 @@
 package AubergeInnServlet;
 
-
 import AubergeInn.GestionAubergeInn;
 import AubergeInn.IFT287Exception;
+import AubergeInn.Securite;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,12 +16,17 @@ import java.util.List;
 
 /**
  * Servlet qui gère la connexion d'un utilisateur au système de gestion de
- * bibliothèque
+ * AubergeInn
  *
  * <pre>
  * Vincent Ducharme
  * Université de Sherbrooke
  * Version 1.0 - 11 novembre 2018
+ * IFT287 - Exploitation de BD relationnelles et OO
+ *
+ * Frédéric Bergeron
+ * Université de Sherbrooke
+ * Version 2.0 - 14 novembre 2019
  * IFT287 - Exploitation de BD relationnelles et OO
  * </pre>
  */
@@ -38,7 +43,7 @@ public class Accueil extends HttpServlet
         {
             if (!AubergeHelper.peutProcederLogin(getServletContext(), request, response))
             {
-                System.out.println("Servlet Accueil : POST ne peut pas procéder.");
+                System.out.println("Servlet Accueil : POST ne peut pas procèder.");
                 // Le dispatch sera fait par BiblioHelper.peutProceder
                 return;
             }
@@ -62,17 +67,24 @@ public class Accueil extends HttpServlet
                     String userId = request.getParameter("userId");
                     String motDePasse = request.getParameter("motDePasse");
 
-                    request.setAttribute("userId", userId);
-                    request.setAttribute("motDePasse", motDePasse);
 
                     if (userId == null || userId.equals(""))
                         throw new IFT287Exception("Le nom d'utilisateur ne peut pas être nul!");
                     if (motDePasse == null || motDePasse.equals(""))
                         throw new IFT287Exception("Le mot de passe ne peut pas être nul!");
 
-                    if (AubergeHelper.getAubergeInterro(session).getGestionClient().informationsConnexionValide(userId, motDePasse))
+                    byte[] sha = Securite.getSHA(motDePasse);
+                    String motDePasseSHA = Securite.toHexString(sha);
+
+                    request.setAttribute("userId", userId);
+                    request.setAttribute("motDePasseSHA", motDePasseSHA);
+
+                    if (AubergeHelper.getAubergeInterro(session).getGestionClient().informationsConnexionValide(userId,
+                            motDePasseSHA))
                     {
                         session.setAttribute("userID", userId);
+                        if(AubergeHelper.getAubergeInterro(session).getGestionClient().utilisateurEstAdministrateur(userId))
+                            session.setAttribute("admin", true);
                         session.setAttribute("etat", AubergeInnConstantes.CONNECTE);
 
                         System.out.println("Servlet Accueil : POST dispatch vers accueil.jsp");
@@ -101,50 +113,64 @@ public class Accueil extends HttpServlet
                 try
                 {
                     // lecture des paramètres du formulaire de creerCompte.jsp
-                    String utilisateur = request.getParameter("userId");
+                    String userId = request.getParameter("userId");
                     String motDePasse = request.getParameter("motDePasse");
+
                     String nom = request.getParameter("nom");
                     String prenom = request.getParameter("prenom");
                     String age = request.getParameter("age");
 
-                    request.setAttribute("userId", utilisateur);
-                    request.setAttribute("motDePasse", motDePasse);
-                    request.setAttribute("nom", nom);
-                    request.setAttribute("prenom", prenom);
-                    request.setAttribute("age", age);
 
-                    if (utilisateur == null || utilisateur.equals(""))
+                    if (userId == null || userId.equals(""))
                         throw new IFT287Exception("Vous devez entrer un nom d'utilisateur!");
                     if (motDePasse == null || motDePasse.equals(""))
                         throw new IFT287Exception("Vous devez entrer un mot de passe!");
                     if (nom == null || nom.equals(""))
-                        throw new IFT287Exception("Vous devez entrer un numéro de nom!");
+                        throw new IFT287Exception("Vous devez entrer un nom!");
                     if (prenom == null || prenom.equals(""))
                         throw new IFT287Exception("Vous devez entrer un prenom!");
                     if (age == null || age.equals(""))
                         throw new IFT287Exception("Vous devez entrer un age!");
 
+                    byte[] sha = Securite.getSHA(motDePasse);
+                    String motDePasseSHA = Securite.toHexString(sha);
+
+                    request.setAttribute("userId", userId);
+                    request.setAttribute("motDePasseSHA", motDePasseSHA);
+                    request.setAttribute("nom", nom);
+                    request.setAttribute("prenom", prenom);
+                    request.setAttribute("age", age);
+
+                    int ageInt = AubergeHelper.ConvertirInt(age, "L'âge");
+
+                    String accesS = request.getParameter("acces");
+                    int acces = 1;
+                    if (accesS != null)
+                        acces = AubergeHelper.ConvertirInt(accesS, "Le niveau d'accés");
+
                     GestionAubergeInn aubergeUpdate = AubergeHelper.getAubergeUpdate(session);
                     synchronized (aubergeUpdate)
                     {
-                        aubergeUpdate.getGestionClient().ajouterClient(utilisateur, motDePasse, nom, prenom, Integer.parseInt(age));
+                        aubergeUpdate.getGestionClient().ajouterClient(userId, motDePasseSHA, acces, nom, prenom, ageInt);
                     }
 
                     // S'il y a déjà un userID dans la session, c'est parce
-                    // qu'on est admin et qu'on inscrit un nouveau membre
+                    // qu'on est admin et qu'on inscrit un nouveau client
                     if (session.getAttribute("userID") == null)
                     {
-                        session.setAttribute("userID", utilisateur);
+                        session.setAttribute("userID", userId);
+                        if(acces == 0)
+                            session.setAttribute("admin", acces == 0);
                         session.setAttribute("etat", AubergeInnConstantes.CONNECTE);
 
                         System.out.println("Servlet Accueil : POST dispatch vers accueil.jsp");
                         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/accueil.jsp");
                         dispatcher.forward(request, response);
                     }
-                    else
+                    else if (request.getParameter("gestionClient") != null)
                     {
-                        // Vers gestionMembre?
-                        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/accueil.jsp");
+                        // Vers gestionCLient?
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listeClient.jsp");
                         dispatcher.forward(request, response);
                     }
                 }

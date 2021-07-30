@@ -229,7 +229,7 @@ public class AubergeInn
                     System.out.println(client.getIdClient() + " " + client.getNom() + " " + client.getPrenom() + " " + client.getAge());
 
                     List<TupleReserveChambre> reserveChambres = gestionAubergeInn.getGestionReservation()
-                            .listerToutesReservationClient(idClient);
+                            .listerToutesReservationClient(client.getUtilisateur());
                     System.out.println("\nRéservation:");
                     System.out.println("\nid dateDebut dateFin prixTotal");
                     for (TupleReserveChambre reserve : reserveChambres)
