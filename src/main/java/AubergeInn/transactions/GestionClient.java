@@ -33,6 +33,12 @@ public class GestionClient
         return this.client.existe(utilisateur);
     }
 
+    public boolean existe(int idClient)
+            throws SQLException
+    {
+        return this.client.existe(idClient);
+    }
+
     public boolean informationsConnexionValide(String utilisateur, String motDePasseSHA)
             throws SQLException, IFT287Exception
     {

@@ -1,16 +1,13 @@
 <%@ page import="java.util.*,java.text.*,AubergeInnServlet.*,AubergeInn.*"
 		 contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="AubergeInn.tuples.TupleClient" %>
-<%@ page import="AubergeInn.tuples.TupleReserveChambre" %>
 <%@ page import="AubergeInn.tuples.TupleChambre" %>
+<%@ page import="AubergeInn.tuples.TupleCommodite" %>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>IFT287 - Système de gestion de d'AubergeInn</title>
-	<meta name="author" content="Vincent Ducharme">
 	<meta name="description"
-		  content="Page d'accueil du système de gestion d'AubergeInn.">
-
+		  content="Page de gestion des chambre">
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport"
@@ -25,17 +22,18 @@
 <body>
 <div class="container">
 	<jsp:include page="/WEB-INF/navigation.jsp" />
-	<h1 class="text-center">Système de gestion d'AubergeInn.</h1>
+	<h1 class="text-center">Gestionnaire des Chambres</h1>
 	<%
 		if (session.getAttribute("admin") != null)
 		{
 	%>
-	<h3 class="text-center">Chambre libres</h3>
+	<h3 class="text-center">Afficher une chambre</h3>
 	<div class="col-8 offset-2">
 		<table class="table">
 			<thead class="thead-dark">
+			<%-- titre des colonnes --%>
 			<tr>
-				<th scope="col"># de chambre</th>
+				<th scope="col"># Chambre</th>
 				<th scope="col">Nom</th>
 				<th scope="col">Type</th>
 				<th scope="col">Prix de base</th>
@@ -43,26 +41,70 @@
 			</thead>
 			<tbody>
 			<%
-				List<TupleChambre> chambres = AubergeHelper.getAubergeInterro(session).getGestionChambre().ListerChambresLibres();
-				for (TupleChambre ch : chambres)
-				{
+				String idChambre = (String) session.getAttribute("idChambre");
+				if(idChambre == null){
+					idChambre = (String) request.getAttribute("idChambre");
+					if(idChambre == null){
+						idChambre = "";
+					}
+				}
+				TupleChambre chambre = AubergeHelper.getAubergeInterro(session).getGestionChambre().getChambre(Integer.parseInt(idChambre));
 			%>
 			<tr>
-				<td><%=ch.getIdChambre()%></td>
-				<td><%=ch.getNom()%></td>
-				<td><%=ch.getType()%></td>
-				<td><%=ch.getPrixBase()%></td>
+				<td style="vertical-align: top;"><%=chambre.getIdChambre()%></td>
+				<td style="vertical-align: top;"><%=chambre.getNom()%></td>
+				<td style="vertical-align: top;"><%=chambre.getType()%></td>
+				<td style="vertical-align: top;"><%=chambre.getPrixBase()%></td>
+			<tr>
+			<tr>
+				<td></td>
+				<td colspan="2">
+					<%
+						GestionAubergeInn a = AubergeHelper.getAubergeInterro(session);
+						List<TupleCommodite> commodites = a.getGestionChambre().ListerCommodites(chambre.getIdChambre());
+						if (commodites.size() == 0)
+						{
+					%>
+					 	Aucune Commoditée
+					<%
+					}
+					else
+					{
+					%>
+					<table class="table">
+						<thead class="thead-dark">
+						<tr>
+							<th scope="col"># commodité</th>
+							<th scope="col">Description</th>
+							<th scope="col">Prix</th>
+						</tr>
+						</thead>
+						<tbody>
+						<%
+							for (TupleCommodite c : commodites)
+							{
+						%>
+						<tr>
+							<th scope="row"><%=c.getIdCommodite()%></th>
+							<td><%=c.getDescription()%></td>
+							<td><%=c.getPrix()%></td>
+						</tr>
+						<%
+							} // end for chaque commodite
+						%>
+						</tbody>
+					</table>
+					<%
+							} // end else commodite
+					%>
+				</td>
 			</tr>
-			<%
-				}
-			%>
 			</tbody>
 		</table>
 	</div>
 	<%
 	} // end if admin
 	%>
-
 	<br>
 	<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
 	<jsp:include page="/WEB-INF/messageErreur.jsp" />

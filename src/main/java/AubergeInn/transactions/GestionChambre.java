@@ -4,7 +4,6 @@ package AubergeInn.transactions;
 import AubergeInn.Connexion;
 import AubergeInn.IFT287Exception;
 import AubergeInn.tables.TableChambres;
-import AubergeInn.tables.TableCommodites;
 import AubergeInn.tuples.TupleChambre;
 import AubergeInn.tuples.TupleCommodite;
 
@@ -14,7 +13,6 @@ import java.util.List;
 public class GestionChambre
 {
     private TableChambres chambre;
-    private TableCommodites commodite;
     private Connexion cx;
 
     /**
@@ -23,8 +21,6 @@ public class GestionChambre
     public GestionChambre(TableChambres chambre) throws IFT287Exception
     {
         this.cx = chambre.getConnexion();
-//        if (chambre.getConnexion() != reservation.getConnexion())
-//            throw new IFT287Exception("Les instances de chambre et de reservation n'utilisent pas la même connexion au serveur");
         this.chambre = chambre;
     }
 
@@ -43,6 +39,27 @@ public class GestionChambre
 
             // Ajout d'une chambre dans la table des chambres
             chambre.ajouter(idChambre, nom, type, prixBase);
+
+            // Commit
+            cx.commit();
+        } catch (Exception e)
+        {
+            cx.rollback();
+            throw e;
+        }
+    }
+
+    /**
+     * Ajout d'une nouvelle chambre dans la base de données. S'il existe déjà, une
+     * exception est levée.
+     */
+    public void ajouterChambre(String nom, String type, float prixBase)
+            throws SQLException, IFT287Exception, Exception
+    {
+        try
+        {
+            // Ajout d'une chambre dans la table des chambres
+            chambre.ajouter(nom, type, prixBase);
 
             // Commit
             cx.commit();
@@ -95,6 +112,20 @@ public class GestionChambre
             throw e;
         }
 
+    }
+
+    public List<TupleChambre> ListerChambres() throws  SQLException
+    {
+        try
+        {
+            List<TupleChambre> chambres = chambre.listerChambres();
+            cx.commit();
+            return chambres;
+        } catch (Exception e)
+        {
+            cx.rollback();
+            throw e;
+        }
     }
 
     public List<TupleCommodite> ListerCommodites(int idChambre) throws SQLException

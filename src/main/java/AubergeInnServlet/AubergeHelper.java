@@ -154,4 +154,16 @@ public class AubergeHelper
             throw new IFT287Exception(nom + " ne doit être composé que de chiffre.");
         }
     }
+
+    public static float ConvertirFloat(String v, String nom) throws IFT287Exception
+    {
+        try
+        {
+            return Float.parseFloat(v);
+        }
+        catch(Exception e)
+        {
+            throw new IFT287Exception(nom + " ne doit être composé que de chiffre.");
+        }
+    }
 }

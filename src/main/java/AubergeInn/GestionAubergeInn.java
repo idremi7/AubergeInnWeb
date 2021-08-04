@@ -109,4 +109,9 @@ public class GestionAubergeInn
     {
         this.gestionReservation = gestionReservation;
     }
+
+    public void prettyPrint()
+    {
+        System.out.println("Pretty print!");
+    }
 }

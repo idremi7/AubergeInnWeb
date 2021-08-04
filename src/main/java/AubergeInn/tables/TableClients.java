@@ -25,10 +25,10 @@ public class TableClients
     {
         this.cx = cx;
         stmtListeUtilisateur = cx.getConnection().prepareStatement(
-                "SELECT utilisateur, motDePasse, acces, nom, prenom, age FROM client WHERE acces = ?");
+                "SELECT idclient, utilisateur, motDePasse, acces, nom, prenom, age FROM client WHERE acces = ?");
         stmtExisteUtilisateur = cx.getConnection().prepareStatement(
-                "SELECT utilisateur, motDePasse, acces, nom, prenom, age FROM client WHERE utilisateur = ?");
-        this.stmtExiste = cx.getConnection().prepareStatement("select * from client where idclient = ?");
+                "SELECT idclient, motDePasse, acces, nom, prenom, age FROM client WHERE utilisateur = ?");
+        this.stmtExiste = cx.getConnection().prepareStatement("select idclient, utilisateur, nom, prenom, age from client where idclient = ?");
         this.stmtInsert = cx.getConnection()
                 .prepareStatement("insert into client (utilisateur, motdepasse, acces, nom, prenom, age) "
                         + "values (?,?,?,?,?,?)");
@@ -81,9 +81,10 @@ public class TableClients
         {
             TupleClient tupleClient = new TupleClient();
             tupleClient.setIdClient(idClient);
-            tupleClient.setNom(rset.getString(2));
-            tupleClient.setPrenom(rset.getString(3));
-            tupleClient.setAge(rset.getInt(4));
+            tupleClient.setUtilisateur(rset.getString(2));
+            tupleClient.setNom(rset.getString(3));
+            tupleClient.setPrenom(rset.getString(4));
+            tupleClient.setAge(rset.getInt(5));
 
             rset.close();
             return tupleClient;
@@ -101,13 +102,14 @@ public class TableClients
         TupleClient tupleClient = null;
         if (rset.next())
         {
+            int idClient = rset.getInt(1);
             String motDePasse = rset.getString(2);
             int acces = rset.getInt(3);
             String nom = rset.getString(4);
             String prenom = rset.getString(5);
             int age = rset.getInt(6);
 
-            tupleClient = new TupleClient(utilisateur, motDePasse, acces, nom, prenom, age);
+            tupleClient = new TupleClient(idClient, utilisateur, motDePasse, acces, nom, prenom, age);
             rset.close();
         }
         return tupleClient;
@@ -146,13 +148,15 @@ public class TableClients
         ResultSet rset = stmtListeUtilisateur.executeQuery();
         while (rset.next())
         {
-            String motDePasseSHA = rset.getString(2);
-            int acces = rset.getInt(3);
-            String nom = rset.getString(4);
-            String prenom = rset.getString(5);
-            int age = rset.getInt(6);
+            int idClient = rset.getInt(1);
+            String utilisateur = rset.getString(2);
+            String motDePasseSHA = rset.getString(3);
+            int acces = rset.getInt(4);
+            String nom = rset.getString(5);
+            String prenom = rset.getString(6);
+            int age = rset.getInt(7);
 
-            TupleClient tupleClient = new TupleClient(rset.getString(1), motDePasseSHA, acces, nom, prenom, age);
+            TupleClient tupleClient = new TupleClient(idClient, utilisateur, motDePasseSHA, acces, nom, prenom, age);
             clients.add(tupleClient);
         }
         if (avecAdmin)
@@ -161,13 +165,15 @@ public class TableClients
             rset = stmtListeUtilisateur.executeQuery();
             while (rset.next())
             {
+                int idClient = rset.getInt(1);
+                String utilisateur = rset.getString(2);
                 String motDePasseSHA = rset.getString(2);
                 int acces = rset.getInt(3);
                 String nom = rset.getString(4);
                 String prenom = rset.getString(5);
                 int age = rset.getInt(6);
 
-                TupleClient tupleClient = new TupleClient(rset.getString(1), motDePasseSHA, acces, nom, prenom, age);
+                TupleClient tupleClient = new TupleClient(idClient, utilisateur, motDePasseSHA, acces, nom, prenom, age);
                 clients.add(tupleClient);
             }
         }

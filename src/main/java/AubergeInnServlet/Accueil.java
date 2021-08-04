@@ -167,11 +167,9 @@ public class Accueil extends HttpServlet
                         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/accueil.jsp");
                         dispatcher.forward(request, response);
                     }
-                    else if (request.getParameter("gestionClient") != null)
+                    else
                     {
                         // Vers gestionCLient?
-                        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listeClient.jsp");
-                        dispatcher.forward(request, response);
                     }
                 }
                 catch (Exception e)

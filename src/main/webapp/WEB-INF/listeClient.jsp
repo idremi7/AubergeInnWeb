@@ -1,15 +1,13 @@
 <%@ page import="java.util.*,java.text.*,AubergeInnServlet.*,AubergeInn.*"
 		 contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="AubergeInn.tuples.TupleClient" %>
-<%@ page import="AubergeInn.tuples.TupleReserveChambre" %>
-<%@ page import="AubergeInn.tuples.TupleChambre" %>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>IFT287 - Système de gestion de d'AubergeInn</title>
 	<meta name="author" content="Vincent Ducharme">
 	<meta name="description"
-		  content="Page d'accueil du système de gestion d'AubergeInn.">
+		  content="Page de gestion des clients">
 
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
@@ -21,49 +19,61 @@
 		  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
 		  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 		  crossorigin="anonymous">
+
 </head>
 <body>
 <div class="container">
 	<jsp:include page="/WEB-INF/navigation.jsp" />
-	<h1 class="text-center">Système de gestion d'AubergeInn.</h1>
+	<h1 class="text-center">Gestionnaire des Clients</h1>
+
 	<%
 		if (session.getAttribute("admin") != null)
 		{
 	%>
-	<h3 class="text-center">Chambre libres</h3>
+	<h3 class="text-center">Clients</h3>
 	<div class="col-8 offset-2">
+		<FORM ACTION="GererClient" METHOD="GET">
 		<table class="table">
-			<thead class="thead-dark">
+			<thead style="color:white; background-color: #800080">
+			<%-- titre des colonnes --%>
 			<tr>
-				<th scope="col"># de chambre</th>
+				<th scope="col">Sélection<br></th>
+				<th scope="col">Utilisateur</th>
 				<th scope="col">Nom</th>
-				<th scope="col">Type</th>
-				<th scope="col">Prix de base</th>
+				<th scope="col">Prénom</th>
+				<th scope="col">Age</th>
 			</tr>
 			</thead>
 			<tbody>
 			<%
-				List<TupleChambre> chambres = AubergeHelper.getAubergeInterro(session).getGestionChambre().ListerChambresLibres();
-				for (TupleChambre ch : chambres)
+				List<TupleClient> clients = AubergeHelper.getAubergeInterro(session).getGestionClient().getListeClients(false);
+				for (TupleClient c : clients)
 				{
 			%>
 			<tr>
-				<td><%=ch.getIdChambre()%></td>
-				<td><%=ch.getNom()%></td>
-				<td><%=ch.getType()%></td>
-				<td><%=ch.getPrixBase()%></td>
-			</tr>
+				<td style="vertical-align: top;">
+					<INPUT TYPE="RADIO" NAME="clientSelectionne" VALUE="<%= c.getIdClient() %>"><br>
+				</td>
+				<td style="vertical-align: top;"><%= (c.getUtilisateur())%></td>
+				<td style="vertical-align: top;"><%=c.getNom()%></td>
+				<td style="vertical-align: top;"><%=c.getPrenom()%></td>
+				<td style="vertical-align: top;"><%=c.getAge()%></td>
+			<tr>
 			<%
-				}
+				} // end for all clients
 			%>
 			</tbody>
 		</table>
+			<input class="btn btn-outline-primary" type="SUBMIT" NAME="afficher" VALUE="Afficher un client">
+			<input class="btn btn-outline-primary" type="SUBMIT" NAME="ajouter" VALUE="Ajouter un client">
+			<input class="btn btn-outline-danger" type="SUBMIT" NAME="supprimer" VALUE="Supprimer un client">
+		</FORM>
 	</div>
 	<%
 	} // end if admin
 	%>
-
 	<br>
+
 	<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
 	<jsp:include page="/WEB-INF/messageErreur.jsp" />
 	<br>

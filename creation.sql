@@ -3,6 +3,7 @@ CREATE TABLE Client
     idClient SERIAL PRIMARY KEY,
     utilisateur     varchar(255) UNIQUE NOT NULL,
     motDePasse      varchar(255) NOT NULL,
+    acces           numeric(1) NOT NULL DEFAULT 1,
     nom      VARCHAR(255) NOT NULL,
     prenom   VARCHAR(255) NOT NULL,
     age      INTEGER      NOT NULL

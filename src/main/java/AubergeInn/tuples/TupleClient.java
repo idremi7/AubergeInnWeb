@@ -14,8 +14,9 @@ public class TupleClient
     {
     }
 
-    public TupleClient(String utilisateur, String motDePasse, int acces, String nom, String prenom, int age)
+    public TupleClient(int idClient, String utilisateur, String motDePasse, int acces, String nom, String prenom, int age)
     {
+        this.idClient = idClient;
         this.utilisateur = utilisateur;
         this.motDePasseSHA = motDePasse;
         this.acces = acces;

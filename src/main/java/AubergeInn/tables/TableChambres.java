@@ -16,9 +16,11 @@ public class TableChambres
 {
     private final PreparedStatement stmtExiste;
     private final PreparedStatement stmtInsert;
+    private final PreparedStatement stmtInsert2;
     private final PreparedStatement stmtUpdate;
     private final PreparedStatement stmtDelete;
 
+    private final PreparedStatement stmtChambres;
     private final PreparedStatement stmtChambreReserve;
     private final PreparedStatement stmtChambresLibre;
     private final PreparedStatement stmtIsChambreLibre;
@@ -32,8 +34,12 @@ public class TableChambres
         this.stmtExiste = cx.getConnection().prepareStatement("select idchambre, nom, type, prixbase from chambre where idchambre = ?");
         this.stmtInsert = cx.getConnection().prepareStatement("insert into chambre (idchambre, nom, type, prixbase) "
                 + "values (?,?,?,?)");
+        this.stmtInsert2 = cx.getConnection().prepareStatement("insert into chambre (nom, type, prixbase) "
+                + "values (?,?,?)");
         this.stmtUpdate = cx.getConnection().prepareStatement("update chambre set nom = ?, type = ?, prixbase = ? " + "where idchambre = ?");
         this.stmtDelete = cx.getConnection().prepareStatement("delete from chambre where idchambre = ?");
+
+        this.stmtChambres = cx.getConnection().prepareStatement("SELECT idchambre, nom, type, prixbase FROM chambre");
 
         this.stmtChambreReserve = cx.getConnection()
                 .prepareStatement("select t2.idreservation, t2.idclient ,t2.idchambre, t2.datedebut, t2.datefin\n" +
@@ -134,6 +140,18 @@ public class TableChambres
     }
 
     /**
+     * Ajout d'une nouvelle chambre dans la base de données.
+     */
+    public void ajouter(String nom, String type, float prixBase) throws SQLException
+    {
+        /* Ajout d'une chambre. */
+        stmtInsert2.setString(1, nom);
+        stmtInsert2.setString(2, type);
+        stmtInsert2.setFloat(3, prixBase);
+        stmtInsert2.executeUpdate();
+    }
+
+    /**
      * Suppression  d'une chambre.
      */
     public int supprimer(int idChambre) throws SQLException
@@ -161,6 +179,26 @@ public class TableChambres
         }
         rset.close();
         return listCommodite;
+    }
+
+    /**
+     * Trouve toutes les chambres
+     */
+    public List<TupleChambre> listerChambres() throws SQLException
+    {
+        ResultSet rset = stmtChambres.executeQuery();
+        List<TupleChambre> listChambre = new ArrayList<>();
+        while (rset.next())
+        {
+            TupleChambre chambre = new TupleChambre(rset.getInt(1),     //idchambre
+                    rset.getString(2),  //nom
+                    rset.getString(3),  //type
+                    rset.getFloat(4));  //prix de location
+
+            listChambre.add(chambre);
+        }
+        rset.close();
+        return listChambre;
     }
 
     /**
