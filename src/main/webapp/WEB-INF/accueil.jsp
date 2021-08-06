@@ -1,6 +1,7 @@
 <%@ page import="java.util.*,java.text.*,AubergeInnServlet.*,AubergeInn.*"
 		 contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="AubergeInn.tuples.TupleChambre" %>
+<%@ page import="AubergeInn.tuples.TupleReserveChambre" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +16,7 @@
 	<meta name="viewport"
 		  content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+	<link rel="icon" type="image/ico" href="favicon.ico" />
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet"
 		  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -72,6 +74,43 @@
 	</div>
 	<%
 	} // end if admin
+	else
+	{
+		GestionAubergeInn a = AubergeHelper.getAubergeInterro(session);
+		List<TupleReserveChambre> reservations = a.getGestionReservation().listerToutesReservationClient((String)session.getAttribute("userID"));
+	%>
+	<h3 class="text-center">Mes Réservations</h3>
+	<div class="col-8 offset-2">
+		<table class="table">
+			<thead class="thead-dark">
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">IdChambre</th>
+				<th scope="col">Date de début</th>
+				<th scope="col">Date de fin</th>
+				<th scope="col">Prix de location</th>
+			</tr>
+			</thead>
+			<tbody>
+			<%
+				for(TupleReserveChambre r : reservations)
+				{
+			%>
+			<tr>
+				<td><%= r.getIdReservation() %></td>
+				<td><%= r.getIdChambre() %></td>
+				<td><%= r.getDateDebut().toString() %></td>
+				<td><%= r.getDateFin().toString() %></td>
+				<td><%= r.getPrixTotal() %></td>
+			</tr>
+			<%
+				}
+			%>
+			</tbody>
+		</table>
+	</div>
+	<%
+		} //end else
 	%>
 
 	<br>
