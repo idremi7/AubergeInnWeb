@@ -16,6 +16,7 @@
 	<meta name="viewport"
 		  content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+	<link rel="icon" type="image/ico" href="favicon.ico" />
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet"
 		  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -61,55 +62,54 @@
 				<td class="topValign"><%=client.getPrenom()%></td>
 				<td class="topValign"><%=client.getAge()%></td>
 			<tr>
-			<tr>
-				<td></td>
-				<td colspan="2">
-					<%
-						GestionAubergeInn a = AubergeHelper.getAubergeInterro(session);
-						List<TupleReserveChambre> reservations = a.getGestionReservation().listerToutesReservationClient(client.getUtilisateur());
-						if (reservations.size() == 0)
-						{
-					%>
-					Aucune réservation
-					<%
-					}
-					else
-					{
-					%>
-					<table class="table">
-						<thead class="aubergineTheme">
-						<tr>
-							<th scope="col"># réservation</th>
-							<th scope="col">IdChambre</th>
-							<th scope="col">Date de début</th>
-							<th scope="col">Date de fin</th>
-							<th scope="col">prix Total</th>
-						</tr>
-						</thead>
-						<tbody>
-						<%
-							for (TupleReserveChambre r : reservations)
-							{
-						%>
-						<tr>
-							<th scope="row"><%=r.getIdReservation()%></th>
-							<td><%=r.getIdChambre()%></td>
-							<td><%=r.getDateDebut().toString()%></td>
-							<td><%=r.getDateFin().toString()%></td>
-							<td><%=r.getPrixTotal()%></td>
-						</tr>
-						<%
-							} // end for chaque reservation
-						%>
-						</tbody>
-					</table>
-					<%
-							} // end else reservation
-					%>
-				</td>
-			</tr>
+
 			</tbody>
 		</table>
+		<div class="text-center">
+			<%
+				GestionAubergeInn a = AubergeHelper.getAubergeInterro(session);
+				List<TupleReserveChambre> reservations = a.getGestionReservation().listerToutesReservationClient(client.getUtilisateur());
+				if (reservations.size() == 0)
+				{
+			%>
+			Aucune réservation
+			<%
+			}
+			else
+			{
+			%>
+		</div>
+			<table class="table table-sm">
+				<thead class="aubergineTheme">
+				<tr>
+					<th scope="col"># réservation</th>
+					<th scope="col">IdChambre</th>
+					<th scope="col">Date de début</th>
+					<th scope="col">Date de fin</th>
+					<th scope="col">prix Total</th>
+				</tr>
+				</thead>
+				<tbody>
+				<%
+					for (TupleReserveChambre r : reservations)
+					{
+				%>
+				<tr>
+					<th scope="row"><%=r.getIdReservation()%></th>
+					<td><%=r.getIdChambre()%></td>
+					<td><%=r.getDateDebut().toString()%></td>
+					<td><%=r.getDateFin().toString()%></td>
+					<td><%=r.getPrixTotal()%></td>
+				</tr>
+				<%
+					} // end for chaque reservation
+				%>
+				</tbody>
+			</table>
+			<%
+				} // end else reservation
+			%>
+
 	</div>
 	<%
 	} // end if admin

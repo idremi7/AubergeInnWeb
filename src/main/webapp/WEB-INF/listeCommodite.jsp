@@ -15,6 +15,7 @@
 	<meta name="viewport"
 		  content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+	<link rel="icon" type="image/ico" href="favicon.ico" />
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet"
 		  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"

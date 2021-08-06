@@ -6,7 +6,8 @@
 		<meta name="author" content="Rémi Létourneau">
 		<meta name="author" content="Pierre-Daniel Godfrey">
 		<meta name="description" content="Page de création de compte du système de gestion AubergeInn.">
-		
+
+		<link rel="icon" type="image/ico" href="favicon.ico" />
 		<!-- Required meta tags -->
 	    <meta charset="utf-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -16,7 +17,6 @@
 			
 	</head>
 	<body>
-	<jsp:include page="/WEB-INF/navigation.jsp" />
 		<div class="container">
 			<h1 class="text-center">Création d'un compte</h1>
 			<div class="col-md-4 offset-md-4">
