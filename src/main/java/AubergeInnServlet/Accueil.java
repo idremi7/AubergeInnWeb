@@ -15,8 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Servlet qui gère la connexion d'un utilisateur au système de gestion de
- * AubergeInn
+ * Servlet qui gère la connexion d'un utilisateur au système de gestion de AubergeInn
  *
  * <pre>
  * Vincent Ducharme
@@ -27,6 +26,11 @@ import java.util.List;
  * Frédéric Bergeron
  * Université de Sherbrooke
  * Version 2.0 - 14 novembre 2019
+ * IFT287 - Exploitation de BD relationnelles et OO
+ *
+ * Rémi Létourneau & Pierre-Daniel Godfrey
+ * Université de Sherbrooke
+ * Version 3.0 - 06 Aout 2021
  * IFT287 - Exploitation de BD relationnelles et OO
  * </pre>
  */

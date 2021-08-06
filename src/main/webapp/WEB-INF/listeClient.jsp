@@ -22,8 +22,8 @@
 
 </head>
 <body>
+<jsp:include page="/WEB-INF/navigation.jsp" />
 <div class="container">
-	<jsp:include page="/WEB-INF/navigation.jsp" />
 	<h1 class="text-center">Gestionnaire des Clients</h1>
 
 	<%
@@ -39,8 +39,8 @@
 			<tr>
 				<th scope="col">Sélection<br></th>
 				<th scope="col">Utilisateur</th>
-				<th scope="col">Nom</th>
 				<th scope="col">Prénom</th>
+				<th scope="col">Nom</th>
 				<th scope="col">Age</th>
 			</tr>
 			</thead>
@@ -54,10 +54,10 @@
 				<td style="vertical-align: top;">
 					<INPUT TYPE="RADIO" NAME="clientSelectionne" VALUE="<%= c.getIdClient() %>"><br>
 				</td>
-				<td style="vertical-align: top;"><%= (c.getUtilisateur())%></td>
-				<td style="vertical-align: top;"><%=c.getNom()%></td>
-				<td style="vertical-align: top;"><%=c.getPrenom()%></td>
-				<td style="vertical-align: top;"><%=c.getAge()%></td>
+				<td class="topValign"><%= (c.getUtilisateur())%></td>
+				<td class="topValign"><%=c.getPrenom()%></td>
+				<td class="topValign"><%=c.getNom()%></td>
+				<td class="topValign"><%=c.getAge()%></td>
 			<tr>
 			<%
 				} // end for all clients

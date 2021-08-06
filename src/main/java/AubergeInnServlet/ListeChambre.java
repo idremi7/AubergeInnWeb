@@ -32,9 +32,87 @@ public class ListeChambre extends HttpServlet
         else if (request.getParameter("inscrire") != null)
             traiterInscrire(request, response);
         else if (request.getParameter("inclure") != null){
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/inclureCommodite.jsp");
-            dispatcher.forward(request, response);
+
+            System.out.println("Servlet ListeChambre : POST - inclure");
+            try
+            {
+                // lecture des paramètres du formulaire de listeChambre.jsp
+                String idCommodite = request.getParameter("idCommodite");
+                String idChambreParam = request.getParameter("chambreSelectionne");
+
+                if (idCommodite == null || idCommodite.equals(""))
+                    throw new IFT287Exception("Vous devez Sélectionner une commoditée!");
+                if (idChambreParam == null || idChambreParam.equals(""))
+                    throw new IFT287Exception("Vous devez sélectionner une chambre!");
+
+                request.setAttribute("idCommodite", idCommodite);
+                request.setAttribute("idChambre", idChambreParam);
+
+                int idCommoditeInt = AubergeHelper.ConvertirInt(idCommodite, "L'id de la commodite");
+                int idChambre = AubergeHelper.ConvertirInt(idChambreParam, "L'id de la chambre");
+
+                GestionAubergeInn aubergeUpdate = (GestionAubergeInn) request.getSession().getAttribute("aubergeUpdate");
+                synchronized (aubergeUpdate)
+                {
+                    aubergeUpdate.getGestionCommodite().InclureCommodite(idChambre, idCommoditeInt);
+                }
+
+                System.out.println("Servlet ListeChambre : POST dispatch vers listeChambre.jsp");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listeChambre.jsp");
+                dispatcher.forward(request, response);
+            } catch (Exception e)
+            {
+                List<String> listeMessageErreur = new LinkedList<String>();
+                listeMessageErreur.add(e.getMessage());
+                request.setAttribute("listeMessageErreur", listeMessageErreur);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listeChambre.jsp");
+                dispatcher.forward(request, response);
+                // pour déboggage seulement : afficher tout le contenu de l'exception
+                e.printStackTrace();
+            }
         }
+        else if (request.getParameter("enlever") != null){
+
+            System.out.println("Servlet ListeChambre : POST - enlever");
+            try
+            {
+                // lecture des paramètres du formulaire de listeChambre.jsp
+                String idCommodite = request.getParameter("idCommodite");
+                String idChambreParam = request.getParameter("chambreSelectionne");
+
+                if (idCommodite == null || idCommodite.equals(""))
+                    throw new IFT287Exception("Vous devez sélectionner une commoditée!");
+                if (idChambreParam == null || idChambreParam.equals(""))
+                    throw new IFT287Exception("Vous devez sélectionner une chambre!");
+
+                request.setAttribute("idCommodite", idCommodite);
+                request.setAttribute("idChambre", idChambreParam);
+
+                int idCommoditeInt = AubergeHelper.ConvertirInt(idCommodite, "L'id de la commodite");
+                int idChambre = AubergeHelper.ConvertirInt(idChambreParam, "L'id de la chambre");
+
+                GestionAubergeInn aubergeUpdate = (GestionAubergeInn) request.getSession().getAttribute("aubergeUpdate");
+                synchronized (aubergeUpdate)
+                {
+                    aubergeUpdate.getGestionCommodite().enleverCommodite(idChambre, idCommoditeInt);
+                }
+
+                System.out.println("Servlet ListeChambre : POST dispatch vers listeChambre.jsp");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listeChambre.jsp");
+                dispatcher.forward(request, response);
+            } catch (Exception e)
+            {
+                List<String> listeMessageErreur = new LinkedList<String>();
+                listeMessageErreur.add(e.getMessage());
+                request.setAttribute("listeMessageErreur", listeMessageErreur);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listeChambre.jsp");
+                dispatcher.forward(request, response);
+                // pour déboggage seulement : afficher tout le contenu de l'exception
+                e.printStackTrace();
+            }
+        }
+        else if(request.getParameter("supprimer") != null)
+            traiterSupprimer(request, response);
         else
         {
             List<String> listeMessageErreur = new LinkedList<String>();
@@ -99,7 +177,6 @@ public class ListeChambre extends HttpServlet
 
     private void traiterAfficherChambre(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        // verification de l'état de la session
         HttpSession session = request.getSession();
 
         System.out.println("Servlet ListeChambre : GET - afficher");
@@ -119,6 +196,51 @@ public class ListeChambre extends HttpServlet
             dispatcher.forward(request, response);
         }
         catch (Exception e)
+        {
+            List<String> listeMessageErreur = new LinkedList<String>();
+            listeMessageErreur.add(e.getMessage());
+            request.setAttribute("listeMessageErreur", listeMessageErreur);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listeChambre.jsp");
+            dispatcher.forward(request, response);
+            // pour déboggage seulement : afficher tout le contenu de l'exception
+            e.printStackTrace();
+        }
+    }
+
+    private void traiterSupprimer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        System.out.println("Servlet ListeChambre : GET - supprimer");
+        try
+        {
+            // lecture des paramètres du formulaire listeChambre.jsp
+            String idChambreParam = request.getParameter("chambreSelectionne");
+            request.setAttribute("idChambre", idChambreParam);
+            int idChambre = -1;
+
+            if (idChambreParam == null || idChambreParam.equals(""))
+                throw new IFT287Exception("Vous devez sélectionner une chambre!");
+
+            try
+            {
+                idChambre = Integer.parseInt(idChambreParam);
+                // enregistrer dans la session le paramètre idMembre
+                // cette valeur sera utilisée dans listePretMembre.jsp
+                request.getSession().setAttribute("idChambre", idChambreParam);
+            } catch (NumberFormatException e)
+            {
+                throw new IFT287Exception("Format de no Chambre " + idChambreParam + " incorrect.");
+            }
+
+            GestionAubergeInn aubergeUpdate = (GestionAubergeInn) request.getSession().getAttribute("aubergeUpdate");
+            synchronized (aubergeUpdate)
+            {
+                aubergeUpdate.getGestionChambre().supprimerChambre(idChambre);
+            }
+
+            // transfert de la requète à la page JSP pour affichage
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listeChambre.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e)
         {
             List<String> listeMessageErreur = new LinkedList<String>();
             listeMessageErreur.add(e.getMessage());

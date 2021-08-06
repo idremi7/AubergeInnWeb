@@ -9,13 +9,12 @@ import java.io.IOException;
 
 
 /**
- * Servlet qui gère la connexion d'un utilisateur au système de gestion de
- * bibliothèque
+ * Servlet qui gère l'inscription d'un utilisateur au système de gestion d'aubergeInn
  * 
  * <pre>
- * Vincent Ducharme
+ * Rémi Létourneau & Pierre-Daniel Godfrey
  * Université de Sherbrooke
- * Version 1.0 - 11 novembre 2018
+ * Version 2.0 - 06 Aout 2021
  * IFT287 - Exploitation de BD relationnelles et OO
  * </pre>
  */

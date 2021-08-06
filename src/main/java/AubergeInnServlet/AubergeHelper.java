@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.util.StringTokenizer;
 
 public class AubergeHelper
 {
@@ -165,5 +167,16 @@ public class AubergeHelper
         {
             throw new IFT287Exception(nom + " ne doit être composé que de chiffre.");
         }
+    }
+
+    public static Date ConvertirDate(String v, String nom) throws Exception
+    {
+            try
+            {
+                return Date.valueOf(v);
+            } catch (IllegalArgumentException e)
+            {
+                throw new Exception("Date dans un format invalide - "+ nom);
+            }
     }
 }

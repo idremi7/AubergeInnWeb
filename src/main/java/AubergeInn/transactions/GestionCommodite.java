@@ -4,10 +4,12 @@ import AubergeInn.Connexion;
 import AubergeInn.IFT287Exception;
 import AubergeInn.tables.TableCommodites;
 import AubergeInn.tables.TablePossedeCommodite;
+import AubergeInn.tuples.TupleChambre;
 import AubergeInn.tuples.TupleCommodite;
 import AubergeInn.tuples.TuplePossedeCommodite;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class GestionCommodite
 {
@@ -44,6 +46,27 @@ public class GestionCommodite
 
             // Ajout d'une commodite dans la table des commodite
             commodite.ajouter(idCommodite, description, prix);
+
+            // Commit
+            cx.commit();
+        } catch (Exception e)
+        {
+            cx.rollback();
+            throw e;
+        }
+    }
+
+    /**
+     * Ajout d'une nouvelle commodite dans la base de données. S'il existe déjà, une
+     * exception est levée.
+     */
+    public void ajouterCommodite(String description, float prix)
+            throws SQLException, IFT287Exception, Exception
+    {
+        try
+        {
+            // Ajout d'une commodite dans la table des commodite
+            commodite.ajouter(description, prix);
 
             // Commit
             cx.commit();
@@ -94,7 +117,7 @@ public class GestionCommodite
         {
             // Vérifie si la commodite existe déja
             if (commoditeChambre.existe(idCommodite, idChambre))
-                throw new IFT287Exception("le lien de la commodite : " + idCommodite + "avec la chambre " + idChambre + "existe déjà!");
+                throw new IFT287Exception("Le lien de la commodite : " + idCommodite + " avec la chambre " + idChambre + " existe déjà!");
 
             // Ajout d'une commoditeChambre dans la table possedeCommodite
             commoditeChambre.ajouter(idCommodite, idChambre);
@@ -127,6 +150,20 @@ public class GestionCommodite
 
             // Commit
             cx.commit();
+        } catch (Exception e)
+        {
+            cx.rollback();
+            throw e;
+        }
+    }
+
+    public List<TupleCommodite> ListerCommodite() throws  SQLException
+    {
+        try
+        {
+            List<TupleCommodite> commodites = commodite.listeCommodite();
+            cx.commit();
+            return commodites;
         } catch (Exception e)
         {
             cx.rollback();

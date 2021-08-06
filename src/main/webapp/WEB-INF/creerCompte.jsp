@@ -15,6 +15,7 @@
 			
 	</head>
 	<body>
+	<jsp:include page="/WEB-INF/navigation.jsp" />
 		<div class="container">
 			<h1 class="text-center">Création d'un compte</h1>
 			<div class="col-md-4 offset-md-4">

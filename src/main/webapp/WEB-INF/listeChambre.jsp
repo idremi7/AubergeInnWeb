@@ -1,6 +1,7 @@
 <%@ page import="java.util.*,java.text.*,AubergeInnServlet.*,AubergeInn.*"
 		 contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="AubergeInn.tuples.TupleChambre" %>
+<%@ page import="AubergeInn.tuples.TupleCommodite" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,11 +20,11 @@
 		  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
 		  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 		  crossorigin="anonymous">
-
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+<jsp:include page="/WEB-INF/navigation.jsp" />
 <div class="container">
-	<jsp:include page="/WEB-INF/navigation.jsp" />
 	<h1 class="text-center">Gestionnaire des Chambres</h1>
 
 	<%
@@ -51,28 +52,87 @@
 				{
 			%>
 			<tr>
-				<td style="vertical-align: top;">
+				<td class="topValign">
 					<INPUT TYPE="RADIO" NAME="chambreSelectionne" VALUE="<%= ch.getIdChambre() %>"><br>
 				</td>
-				<td style="vertical-align: top;"><%= (ch.getIdChambre())%></td>
-				<td style="vertical-align: top;"><%=ch.getNom()%></td>
-				<td style="vertical-align: top;"><%=ch.getType()%></td>
-				<td style="vertical-align: top;"><%=ch.getPrixBase()%></td>
+				<td class="topValign"><%=ch.getIdChambre()%></td>
+				<td class="topValign"><%=ch.getNom()%></td>
+				<td class="topValign"><%=ch.getType()%></td>
+				<td class="topValign"><%=ch.getPrixBase()%></td>
 			<tr>
+					<% //début sous table commodite  %>
+			<tr>
+				<td></td>
+				<td colspan="2">
+					<%
+						GestionAubergeInn a = AubergeHelper.getAubergeInterro(session);
+						List<TupleCommodite> commodites = a.getGestionChambre().ListerCommodites(ch.getIdChambre());
+						if (commodites.size() == 0)
+						{
+					%>
+					Aucune Commoditée
+					<%
+					}
+					else
+					{
+					%>
+					<table class="table">
+						<thead class="aubergineTheme">
+						<tr>
+							<th scope="col"># commodité</th>
+							<th scope="col">Description</th>
+							<th scope="col">Prix</th>
+						</tr>
+						</thead>
+						<tbody>
+						<%
+							for (TupleCommodite c : commodites)
+							{
+						%>
+						<tr>
+							<th scope="row"><%=c.getIdCommodite()%></th>
+							<td><%=c.getDescription()%></td>
+							<td><%=c.getPrix()%></td>
+						</tr>
+						<%
+							} // end for chaque commodite
+						%>
+						</tbody>
+					</table>
+					<%
+						} // end else commodite
+					%>
+				</td>
+			</tr>
 			<%
 				} // end for all chambres
 			%>
+
 			</tbody>
 		</table>
 			<div class="btn-group mb-3" role="group" aria-label="group1">
-				<input class="btn btn-outline-primary" type="SUBMIT" NAME="afficher" VALUE="Afficher une chambre">
 				<input class="btn btn-outline-primary" type="SUBMIT" NAME="ajouter" VALUE="Ajouter une chambre">
 				<input class="btn btn-outline-danger" type="SUBMIT" NAME="supprimer" VALUE="Supprimer une chambre">
 			</div>
-			<div class="btn-group" role="group" aria-label="group2">
-				<input class="btn btn-outline-secondary" type="SUBMIT" NAME="inclure" VALUE="Inclure une commodite">
-				<input class="btn btn-outline-secondary" type="SUBMIT" NAME="enlever" VALUE="Enlever une commodite">
+			<div class="form-group row">
+				<select class="form-control col-4" id="commodite" name="idCommodite">
+					<option value="" selected >Choisir une commoditée</option>
+					<%
+						List<TupleCommodite> commodites = AubergeHelper.getAubergeInterro(session).getGestionCommodite().ListerCommodite();
+						for (TupleCommodite c : commodites)
+						{
+					%>
+						<option value="<%= (c.getIdCommodite())%>"><%= (c.getDescription())%></option>
+					<%
+						} // end for all chambres
+					%>
+				</select>
+				<div class="btn-group col-8" role="group" aria-label="group2">
+					<input class="btn btn-outline-secondary" type="SUBMIT" NAME="inclure" VALUE="Inclure une commodite">
+					<input class="btn btn-outline-secondary" type="SUBMIT" NAME="enlever" VALUE="Enlever une commodite">
+				</div>
 			</div>
+
 		</FORM>
 	</div>
 	<%

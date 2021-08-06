@@ -54,7 +54,7 @@ public class TableChambres
                                 "LEFT JOIN possedecommodite p on ch.idchambre = p.idchambre " +
                                 "LEFT JOIN commodite c on p.idcommodite = c.idcommodite " +
                                 "where r.idchambre IS NULL OR now() NOT between r.datedebut and r.datefin " +
-                                "GROUP BY ch.idchambre;");
+                                "GROUP BY ch.idchambre ORDER BY ch.idchambre;");
 
         this.stmtIsChambreLibre = cx.getConnection().prepareStatement("Select ch.idchambre, ch.nom, ch.type , (ch.prixbase + coalesce(SUM(c.prix),0)) as prixLocation\n" +
                 "                    from chambre ch\n" +

@@ -15,8 +15,8 @@
 			
 	</head>
 	<body>
-		<div class="container">
-			<jsp:include page="/WEB-INF/navigation.jsp" />
+	<jsp:include page="/WEB-INF/navigation.jsp" />
+	<div class="container">
 			<h1 class="text-center">Ajout d'une chambre</h1>
 			<div class="col-md-4 offset-md-4">
 			<form action="ListeChambre" method="POST">

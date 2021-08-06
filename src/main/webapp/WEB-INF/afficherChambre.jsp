@@ -18,10 +18,12 @@
 		  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
 		  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 		  crossorigin="anonymous">
+
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+<jsp:include page="/WEB-INF/navigation.jsp" />
 <div class="container">
-	<jsp:include page="/WEB-INF/navigation.jsp" />
 	<h1 class="text-center">Gestionnaire des Chambres</h1>
 	<%
 		if (session.getAttribute("admin") != null)
@@ -51,10 +53,10 @@
 				TupleChambre chambre = AubergeHelper.getAubergeInterro(session).getGestionChambre().getChambre(Integer.parseInt(idChambre));
 			%>
 			<tr>
-				<td style="vertical-align: top;"><%=chambre.getIdChambre()%></td>
-				<td style="vertical-align: top;"><%=chambre.getNom()%></td>
-				<td style="vertical-align: top;"><%=chambre.getType()%></td>
-				<td style="vertical-align: top;"><%=chambre.getPrixBase()%></td>
+				<td class="topValign"><%=chambre.getIdChambre()%></td>
+				<td class="topValign"><%=chambre.getNom()%></td>
+				<td class="topValign"><%=chambre.getType()%></td>
+				<td class="topValign"><%=chambre.getPrixBase()%></td>
 			<tr>
 			<tr>
 				<td></td>

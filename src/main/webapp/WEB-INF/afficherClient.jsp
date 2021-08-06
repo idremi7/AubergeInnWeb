@@ -23,8 +23,8 @@
 
 </head>
 <body>
+<jsp:include page="/WEB-INF/navigation.jsp" />
 <div class="container">
-	<jsp:include page="/WEB-INF/navigation.jsp" />
 	<h1 class="text-center">Gestionnaire des Clients</h1>
 	<%
 		if (session.getAttribute("admin") != null)
@@ -78,6 +78,7 @@
 						<thead class="thead-dark">
 						<tr>
 							<th scope="col"># réservation</th>
+							<th scope="col">IdChambre</th>
 							<th scope="col">Date de début</th>
 							<th scope="col">Date de fin</th>
 							<th scope="col">prix Total</th>
@@ -90,6 +91,7 @@
 						%>
 						<tr>
 							<th scope="row"><%=r.getIdReservation()%></th>
+							<td><%=r.getIdChambre()%></td>
 							<td><%=r.getDateDebut().toString()%></td>
 							<td><%=r.getDateFin().toString()%></td>
 							<td><%=r.getPrixTotal()%></td>

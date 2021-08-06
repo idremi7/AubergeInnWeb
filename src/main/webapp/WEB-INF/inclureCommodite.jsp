@@ -28,8 +28,8 @@
           crossorigin="anonymous">
 </head>
 <body>
+<jsp:include page="/WEB-INF/navigation.jsp" />
 <div class="container">
-    <jsp:include page="/WEB-INF/navigation.jsp" />
     <h1 class="text-center">Gestionnaire des Chambres</h1>
     <%
         if (session.getAttribute("admin") != null)
@@ -37,7 +37,37 @@
     %>
     <h3 class="text-center">Inclure une commoditée</h3>
     <div class="col-8 offset-2">
-
+        <FORM ACTION="ListeChambre" METHOD="GET">
+            <%
+                String idChambre = (String) session.getAttribute("idChambre");
+                if(idChambre == null){
+                    idChambre = (String) request.getAttribute("idChambre");
+                    if(idChambre == null){
+                        idChambre = "";
+                    }
+                }
+            %>
+            <div class="form-group">
+                <label for="idChambre">IdChambre :</label>
+                <input type="number" id="idChambre" name="idChambre" readonly disabled value="<%= idChambre %>">
+            </div>
+            <div class="form-group">
+                <label for="commodite">Choisir une commoditée :</label>
+                <select id="commodite" name="idCommodite">
+                    <option value="" selected > - </option>
+                    <%
+                        List<TupleCommodite> commodites = AubergeHelper.getAubergeInterro(session).getGestionCommodite().ListerCommodite();
+                        for (TupleCommodite c : commodites)
+                        {
+                    %>
+                    <option value="<%= (c.getIdCommodite())%>"><%= (c.getDescription())%></option>
+                    <%
+                        } // end for all chambres
+                    %>
+                </select>
+            </div>
+            <input class="btn btn-primary" type="SUBMIT" name="inclure" value="Inclure">
+        </FORM>
     </div>
     <%
         } // end if admin

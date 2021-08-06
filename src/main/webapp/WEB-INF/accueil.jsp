@@ -1,7 +1,5 @@
 <%@ page import="java.util.*,java.text.*,AubergeInnServlet.*,AubergeInn.*"
 		 contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="AubergeInn.tuples.TupleClient" %>
-<%@ page import="AubergeInn.tuples.TupleReserveChambre" %>
 <%@ page import="AubergeInn.tuples.TupleChambre" %>
 <!DOCTYPE html>
 <html>
@@ -24,40 +22,49 @@
 </head>
 <body>
 <div class="container">
-	<jsp:include page="/WEB-INF/navigation.jsp" />
 	<h1 class="text-center">Système de gestion d'AubergeInn.</h1>
 	<%
 		if (session.getAttribute("admin") != null)
 		{
 	%>
-	<h3 class="text-center">Chambre libres</h3>
-	<div class="col-8 offset-2">
-		<table class="table">
-			<thead class="thead-dark">
-			<tr>
-				<th scope="col"># de chambre</th>
-				<th scope="col">Nom</th>
-				<th scope="col">Type</th>
-				<th scope="col">Prix de base</th>
-			</tr>
-			</thead>
-			<tbody>
-			<%
-				List<TupleChambre> chambres = AubergeHelper.getAubergeInterro(session).getGestionChambre().ListerChambresLibres();
-				for (TupleChambre ch : chambres)
-				{
-			%>
-			<tr>
-				<td><%=ch.getIdChambre()%></td>
-				<td><%=ch.getNom()%></td>
-				<td><%=ch.getType()%></td>
-				<td><%=ch.getPrixBase()%></td>
-			</tr>
-			<%
-				}
-			%>
-			</tbody>
-		</table>
+	<div>
+		<div class="row">
+			<div class="col-6">
+				<h3 class="text-center">Chambre libres</h3>
+				<table class="table">
+					<thead class="aubergineTheme">
+					<tr>
+						<th scope="col"># de chambre</th>
+						<th scope="col">Nom</th>
+						<th scope="col">Type</th>
+						<th scope="col">Prix de location</th>
+					</tr>
+					</thead>
+					<tbody>
+					<%
+						List<TupleChambre> chambres = AubergeHelper.getAubergeInterro(session).getGestionChambre().ListerChambresLibres();
+						for (TupleChambre ch : chambres)
+						{
+					%>
+					<tr>
+						<td><%=ch.getIdChambre()%></td>
+						<td><%=ch.getNom()%></td>
+						<td><%=ch.getType()%></td>
+						<td><%=ch.getPrixBase()%></td>
+					</tr>
+					<%
+						}
+					%>
+					</tbody>
+				</table>
+				<FORM action="Reservation" METHOD="get">
+					<input class="btn btn-primary" type="SUBMIT" name="allerReserver" value="Réserver">
+				</FORM>
+			</div>
+			<div class="col-6">
+				<img src="https://s-media-cache-ak0.pinimg.com/originals/29/04/16/290416516a8a633375a8738510e34df2.jpg" alt="notre ami">
+			</div>
+		</div>
 	</div>
 	<%
 	} // end if admin

@@ -24,13 +24,6 @@ public class GererClient extends HttpServlet
             HttpSession session = request.getSession();
             Integer etat = (Integer) session.getAttribute("etat");
 
-            // lecture des paramètres du formulaire ListeClient.jsp
-            String idClientParam = request.getParameter("clientSelectionne");
-            request.setAttribute("idClient", idClientParam);
-
-            // conversion du parametre idClient en entier
-            int idClient = -1; // inialisation requise par compilateur Java
-
             if (etat == null)
             {
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
@@ -39,6 +32,13 @@ public class GererClient extends HttpServlet
             else if (request.getParameter("afficher") != null)
             {
                 System.out.println("Servlet GererClient : GET - afficher");
+
+                // lecture des paramètres du formulaire ListeClient.jsp
+                String idClientParam = request.getParameter("clientSelectionne");
+                request.setAttribute("idClient", idClientParam);
+
+                // conversion du parametre idClient en entier
+                int idClient = -1; // inialisation requise par compilateur Java
 
                 session.setAttribute("idClient", null);
                 session.setAttribute("etat", new Integer(AubergeInnConstantes.CONNECTE));
@@ -73,32 +73,7 @@ public class GererClient extends HttpServlet
             }
             else if (request.getParameter("supprimer") != null)
             {
-                try
-                {
-                    idClient = Integer.parseInt(idClientParam);
-                    // enregistrer dans la session le paramètre idMembre
-                    // cette valeur sera utilisée dans listePretMembre.jsp
-                    session.setAttribute("idClient", idClientParam);
-                }
-                catch (NumberFormatException e)
-                {
-                    throw new IFT287Exception("Format de no Client " + idClientParam + " incorrect.");
-                }
-
-                // vérifier existence du membre
-                GestionAubergeInn aubergeInterrogation = (GestionAubergeInn)session.getAttribute("aubergeInterrogation");
-                if (!aubergeInterrogation.getGestionClient().existe(idClient))
-                    throw new IFT287Exception("Client " + idClient + " inexistant.");
-
-                GestionAubergeInn aubergeUpdate = AubergeHelper.getAubergeUpdate(session);
-                synchronized (aubergeUpdate)
-                {
-                    aubergeUpdate.getGestionClient().supprimerClient(idClient);
-                }
-
-                // transfert de la requète à la page JSP pour affichage
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listeClient.jsp");
-                dispatcher.forward(request, response);
+                traiterSupprimer(request, response, session);
             }
             else if (request.getParameter("inscrire") != null)
             {
@@ -178,6 +153,43 @@ public class GererClient extends HttpServlet
         {
             e.printStackTrace();
         }
+    }
+
+    private void traiterSupprimer(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception
+    {
+        // lecture des paramètres du formulaire ListeClient.jsp
+        String idClientParam = request.getParameter("clientSelectionne");
+        request.setAttribute("idClient", idClientParam);
+
+        // conversion du parametre idClient en entier
+        int idClient = -1; // inialisation requise par compilateur Java
+
+        try
+        {
+            idClient = Integer.parseInt(idClientParam);
+            // enregistrer dans la session le paramètre idMembre
+            // cette valeur sera utilisée dans listePretMembre.jsp
+            session.setAttribute("idClient", idClientParam);
+        }
+        catch (NumberFormatException e)
+        {
+            throw new IFT287Exception("Format de no Client " + idClientParam + " incorrect.");
+        }
+
+        // vérifier existence du membre
+        GestionAubergeInn aubergeInterrogation = (GestionAubergeInn) session.getAttribute("aubergeInterrogation");
+        if (!aubergeInterrogation.getGestionClient().existe(idClient))
+            throw new IFT287Exception("Client " + idClient + " inexistant.");
+
+        GestionAubergeInn aubergeUpdate = AubergeHelper.getAubergeUpdate(session);
+        synchronized (aubergeUpdate)
+        {
+            aubergeUpdate.getGestionClient().supprimerClient(idClient);
+        }
+
+        // transfert de la requète à la page JSP pour affichage
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/listeClient.jsp");
+        dispatcher.forward(request, response);
     }
 
     @Override
