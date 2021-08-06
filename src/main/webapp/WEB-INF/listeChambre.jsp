@@ -6,7 +6,8 @@
 <html>
 <head>
 	<title>IFT287 - Système de gestion de d'AubergeInn</title>
-	<meta name="author" content="Vincent Ducharme">
+	<meta name="author" content="Rémi Létourneau">
+	<meta name="author" content="Pierre-Daniel Godfrey">
 	<meta name="description"
 		  content="Page de gestion des clients">
 
@@ -35,7 +36,7 @@
 	<div class="col-8 offset-2">
 		<FORM ACTION="ListeChambre" METHOD="GET">
 		<table class="table">
-			<thead style="color:white; background-color: #800080">
+			<thead class="aubergineTheme">
 			<%-- titre des colonnes --%>
 			<tr>
 				<th scope="col">Sélection<br></th>

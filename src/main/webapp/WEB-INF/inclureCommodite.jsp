@@ -13,6 +13,8 @@
 <html>
 <head>
     <title>IFT287 - Système de gestion de d'AubergeInn</title>
+    <meta name="author" content="Rémi Létourneau">
+    <meta name="author" content="Pierre-Daniel Godfrey">
     <meta name="description"
           content="Page de gestion des chambre">
 

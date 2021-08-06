@@ -6,6 +6,8 @@
 <html>
 <head>
 	<title>IFT287 - Système de gestion de d'AubergeInn</title>
+	<meta name="author" content="Rémi Létourneau">
+	<meta name="author" content="Pierre-Daniel Godfrey">
 	<meta name="description"
 		  content="Page de gestion des chambre">
 	<!-- Required meta tags -->
@@ -32,7 +34,7 @@
 	<h3 class="text-center">Afficher une chambre</h3>
 	<div class="col-8 offset-2">
 		<table class="table">
-			<thead class="thead-dark">
+			<thead class="aubergineTheme">
 			<%-- titre des colonnes --%>
 			<tr>
 				<th scope="col"># Chambre</th>
@@ -74,7 +76,7 @@
 					{
 					%>
 					<table class="table">
-						<thead class="thead-dark">
+						<thead class="aubergineTheme">
 						<tr>
 							<th scope="col"># commodité</th>
 							<th scope="col">Description</th>

@@ -6,7 +6,8 @@
 <html>
 <head>
 	<title>IFT287 - Système de gestion de d'AubergeInn</title>
-	<meta name="author" content="Vincent Ducharme">
+	<meta name="author" content="Rémi Létourneau">
+	<meta name="author" content="Pierre-Daniel Godfrey">
 	<meta name="description"
 		  content="Page de gestion des clients">
 
@@ -20,6 +21,7 @@
 		  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
 		  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 		  crossorigin="anonymous">
+	<link rel="stylesheet" href="css/main.css">
 
 </head>
 <body>
@@ -33,7 +35,7 @@
 	<h3 class="text-center">Afficher un client</h3>
 	<div class="col-8 offset-2">
 		<table class="table">
-			<thead class="thead-dark">
+			<thead class="aubergineTheme">
 			<%-- titre des colonnes --%>
 			<tr>
 				<th scope="col">Utilisateur</th>
@@ -54,10 +56,10 @@
 				TupleClient client = AubergeHelper.getAubergeInterro(session).getGestionClient().getClient(Integer.parseInt(idClient));
 			%>
 			<tr>
-				<td style="vertical-align: top;"><%= (client.getUtilisateur())%></td>
-				<td style="vertical-align: top;"><%=client.getNom()%></td>
-				<td style="vertical-align: top;"><%=client.getPrenom()%></td>
-				<td style="vertical-align: top;"><%=client.getAge()%></td>
+				<td class="topValign"><%= (client.getUtilisateur())%></td>
+				<td class="topValign"><%=client.getNom()%></td>
+				<td class="topValign"><%=client.getPrenom()%></td>
+				<td class="topValign"><%=client.getAge()%></td>
 			<tr>
 			<tr>
 				<td></td>
@@ -75,7 +77,7 @@
 					{
 					%>
 					<table class="table">
-						<thead class="thead-dark">
+						<thead class="aubergineTheme">
 						<tr>
 							<th scope="col"># réservation</th>
 							<th scope="col">IdChambre</th>

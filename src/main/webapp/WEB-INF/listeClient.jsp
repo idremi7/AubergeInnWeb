@@ -5,7 +5,8 @@
 <html>
 <head>
 	<title>IFT287 - Système de gestion de d'AubergeInn</title>
-	<meta name="author" content="Vincent Ducharme">
+	<meta name="author" content="Rémi Létourneau">
+	<meta name="author" content="Pierre-Daniel Godfrey">
 	<meta name="description"
 		  content="Page de gestion des clients">
 
@@ -20,6 +21,7 @@
 		  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 		  crossorigin="anonymous">
 
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 <jsp:include page="/WEB-INF/navigation.jsp" />
@@ -34,7 +36,7 @@
 	<div class="col-8 offset-2">
 		<FORM ACTION="GererClient" METHOD="GET">
 		<table class="table">
-			<thead style="color:white; background-color: #800080">
+			<thead class="aubergineTheme">
 			<%-- titre des colonnes --%>
 			<tr>
 				<th scope="col">Sélection<br></th>

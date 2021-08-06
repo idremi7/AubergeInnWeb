@@ -5,7 +5,8 @@
 <html>
 <head>
 	<title>IFT287 - Système de gestion de d'AubergeInn</title>
-	<meta name="author" content="Vincent Ducharme">
+	<meta name="author" content="Rémi Létourneau">
+	<meta name="author" content="Pierre-Daniel Godfrey">
 	<meta name="description"
 		  content="Page d'accueil du système de gestion d'AubergeInn.">
 
@@ -19,8 +20,11 @@
 		  href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
 		  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 		  crossorigin="anonymous">
+
+	<link rel="stylesheet" href="css/main.css">
 </head>
-<body>
+<body class="bg">
+<jsp:include page="/WEB-INF/navigation.jsp" />
 <div class="container">
 	<h1 class="text-center">Système de gestion d'AubergeInn.</h1>
 	<%

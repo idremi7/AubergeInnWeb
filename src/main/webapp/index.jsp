@@ -9,7 +9,8 @@
 <html>
 <head>
     <title>IFT287 - Système de gestion de bibliothèque</title>
-    <meta name="author" content="Vincent Ducharme">
+    <meta name="author" content="Rémi Létourneau">
+    <meta name="author" content="Pierre-Daniel Godfrey">
     <meta name="description" content="Page d'accueil du système de gestion de la bilbiothèque.">
 
     <!-- Required meta tags -->

@@ -3,7 +3,8 @@
 <html>
 <head>
     <title>IFT287 - Système de gestion d'aubergeInn</title>
-    <meta name="author" content="Vincent Ducharme">
+    <meta name="author" content="Rémi Létourneau">
+    <meta name="author" content="Pierre-Daniel Godfrey">
     <meta name="description" content="Page d'accueil du système de gestion d'aubergeInn.">
 
     <!-- Required meta tags -->

@@ -4,6 +4,7 @@
 	<head>
 		<title>IFT287 - Système de gestion de bibliothèque</title>
 		<meta name="author" content="Rémi Létourneau">
+		<meta name="author" content="Pierre-Daniel Godfrey">
 		<meta name="description" content="Page de création de compte du système de gestion AubergeInn.">
 		
 		<!-- Required meta tags -->
