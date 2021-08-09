@@ -12,11 +12,6 @@
 	%>
 			<li><a class="nav-item nav-link text-white" href="ListeChambre">Gérer les chambres</a></li>
 			<li><a class="nav-item nav-link text-white" href="ListeCommodite">Gérer les commoditées</a></li>
-			<li class="ml-5">
-				<audio controls autoplay>
-					<source src="audio/Eggplant.mp3" type="audio/mpeg">
-				</audio>
-			</li>
 		</ul>
 		</div>
 		<div class="navbar-collapse collapse justify-content-end">

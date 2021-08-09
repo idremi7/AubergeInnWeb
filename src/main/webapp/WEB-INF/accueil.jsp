@@ -112,7 +112,11 @@
 	<%
 		} //end else
 	%>
-
+	//Petit musique d'aubergine
+	<audio controls autoplay>
+		//Video de Michael Franks : https://www.youtube.com/watch?v=peuy_DcJhp8&ab_channel=MCSong
+		<source src="audio/Eggplant.mp3" type="audio/mpeg">
+	</audio>
 	<br>
 	<%-- inclusion d'une autre page pour l'affichage des messages d'erreur--%>
 	<jsp:include page="/WEB-INF/messageErreur.jsp" />
